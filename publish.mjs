@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 
 function parseArgs(argv) {
-  const out = { repo: 'dsh-skill-panel', tag: 'v1.0.0', dryRun: false };
+  const out = { repo: 'dsh-skill-panel', dryRun: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (!a.startsWith('--')) continue;
@@ -27,6 +27,11 @@ function parseArgs(argv) {
 }
 
 const args = parseArgs(process.argv.slice(2));
+// tag 默认取 package.json 的 version，避免忘了 --tag 时把新包挂到旧 release 上
+if (!args.tag) {
+  try { args.tag = 'v' + JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8')).version }
+  catch (err) { args.tag = 'v1.0.0' }
+}
 const token = args.token || process.env.GITHUB_TOKEN || process.env.GH_TOKEN || '';
 const SKIP = /(^|\/)(node_modules|\.git|\.tmp[^/]*)(\/|$)|\.(zip|bak|log)$|^\.DS_Store$/;
 
