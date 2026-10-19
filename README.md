@@ -13,6 +13,7 @@
 - **搜索**：按技能名 / 简介 / 来源过滤。
 - **多选 + 一键写入**：点行选中（可多选），「写入输入框」把 `/a /b /c` 写进对话输入框，接着补任务、回车发送——和 DSH 自带的 `/` 菜单是同一条路。写不进去时自动退化成复制到剪贴板。
 - **窗口大小 / 字号可调**：右上角 ⚙ 里按 − / + 调窗口宽度（360–1000px）与字号（85%–160%）；也可以直接拖气泡右下角改大小，双击右下角回默认宽度。「恢复默认」= 600px / 100%。偏好存在浏览器 `localStorage`，换会话、刷新、重启都还在。字号放大时行高、内边距、圆角、按钮一起等比缩放，不会出现「字大了但挤成一团」。
+- **只列「我装的」**：DSH 内置技能保持默认开启、照常在 `/` 菜单里可用，但不在这个面板里出现——列表只留你自己装的（`~/.dsh/skills` 与各插件自带的），避免「办公文档」那一组内置项把真正要选的技能淹掉。
 - **新技能自动进来**：每次打开气泡重新扫盘，装完技能再打开就在里面，不用重启 DSH。
 - **不占主区域**：气泡浮在界面上（`shell.overlay`），关掉就消失；Esc / 点空白处 / 右上角 × 都能关。
 
@@ -87,7 +88,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File uninstall.ps1
 
 | 文件 | 作用 |
 | --- | --- |
-| `lib/index.js` | 宿主半区。注册 `GET /dsh-skill-panel/list.json`：扫描 `~/.dsh/skills/*/SKILL.md`、`~/.dsh/plugins/*/skills/*/SKILL.md`，与 `skills` 服务里的内置技能合并，输出分组 + 一句话简介。 |
+| `lib/index.js` | 宿主半区。注册 `GET /dsh-skill-panel/list.json`：扫描 `~/.dsh/skills/*/SKILL.md`、`~/.dsh/plugins/*/skills/*/SKILL.md`；`skills` 服务里的内置技能只参与去重与来源判定，**不进入列表**，输出分组 + 一句话简介。 |
 | `lib/client.js` | 浏览器半区。三处注册：`sidebar.panellist` 出「技能」行；`main` 放空组件 `SkillsLauncher`（占位）；`shell.overlay` 挂气泡本体。分类、搜索、多选、尺寸偏好都在这里。 |
 | `cordis.patch.yml` | 让 profile 在启动时把本插件插进配置树（`id: skill-panel`）。 |
 
@@ -102,7 +103,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File uninstall.ps1
 
 ## 已知限制
 
-- 只列「文件系统里的技能」（`~/.dsh/skills`、各插件包的 `skills/`）与 DSH 内置技能；纯远程/市场未安装的技能不会出现。
+- 只列「文件系统里的技能」（`~/.dsh/skills`、各插件包的 `skills/`）；DSH 内置技能保持默认开启，但不在面板里显示；纯远程/市场未安装的技能不会出现。
 - 写入输入框依赖 DSH 的 Lexical 编辑器，只认 `document.execCommand('insertText')`；若未来编辑器换成别的实现，会退化为「复制到剪贴板」。
 - 连续调用插入会插进多份，所以一次只写一次。
 
