@@ -1,0 +1,56 @@
+{
+  "name": "dsh-skill-panel",
+  "version": "1.0.0",
+  "description": "DSH 技能面板：左侧导航多一行「技能」，点开是一个悬浮气泡，按功能分类列出本机所有技能（一条一句简介 + 来源），可搜索、可多选，一键把 /技能名 写进对话输入框；窗口大小与字号可调并记住。",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "skill",
+    "skills",
+    "panel",
+    "slash-command",
+    "ui"
+  ],
+  "type": "module",
+  "main": "lib/index.js",
+  "icon": "./icon.svg",
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE",
+    "icon.svg"
+  ],
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-ui-slots"
+      ]
+    }
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HUIlv0/dsh-skill-panel.git"
+  },
+  "homepage": "https://github.com/HUIlv0/dsh-skill-panel#readme",
+  "bugs": {
+    "url": "https://github.com/HUIlv0/dsh-skill-panel/issues"
+  }
+}
